@@ -20,7 +20,7 @@ class word:
         self.x = screenWidth
         self.y = random.randrange(0,screenHeight-150)
         self.dx = 0.6
-        self.font = pygame.font.Font("Adobe Dia.ttf",34)
+        self.font = pygame.font.Font("Adobe_Dia.ttf",34)
         
     def update(self,color):
         text_surface = self.font.render(self.word, True, color)
@@ -28,11 +28,11 @@ class word:
         screen.blit(text_surface, (int(self.x),int(self.y)))
 
 def updateText(text,x,y):
-    font = pygame.font.Font("Adobe Dia.ttf",32).render(text, True, (0,0,0))
+    font = pygame.font.Font("Adobe_Dia.ttf",32).render(text, True, (0,0,0))
     screen.blit(font,(x,y))
 
 def drawInputText(text,y):
-    font = pygame.font.Font("Adobe Dia.ttf",34).render(text, True, (0,0,0))
+    font = pygame.font.Font("Adobe_Dia.ttf",34).render(text, True, (0,0,0))
     text_width = font.get_width()
     screen.blit(font,(int(screenWidth/2-(text_width/2)),y))
 
