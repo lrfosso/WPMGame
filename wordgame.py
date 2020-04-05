@@ -65,6 +65,7 @@ correctWords = []
 recentCorrectWords = []
 missedWords = 0
 inputWidth = None
+i= 0
 
 pygame.init()
 screen = pygame.display.set_mode([screenWidth,screenHeight])
@@ -98,8 +99,11 @@ while running:
     
     if random.randrange(1,100) == 2:
         wordScreenList.append(word())
-    if random.randrange(1,100) == 2 and len(starScreenList) < 4:
+    
+    if i == 50:
         starScreenList.append(star())
+        i = 0
+    i+=1
 
     for item in recentCorrectWords:
         if item[1] <= seconds - 10:
