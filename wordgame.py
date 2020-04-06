@@ -21,6 +21,8 @@ class word:
         self.y = random.randrange(0,screenHeight-150)
         self.dx = 0.6
         self.font = pygame.font.Font("Adobe_Dia.ttf",34)
+        text_surface = self.font.render(self.word, True, (255,255,255))
+        self.width = text_surface.get_width()
         
     def update(self,color):
         text_surface = self.font.render(self.word, True, color)
@@ -92,7 +94,7 @@ while running:
             if item != subItem:
                 if item.x - subItem.x < 70 and -15 < (item.y - subItem.y) < 15:
                     del wordScreenList[wordScreenList.index(subItem)]
-        if item.x <= 0:
+        if item.x <= -item.width:
             del wordScreenList[wordScreenList.index(item)]
             missedWords += 1
     
