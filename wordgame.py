@@ -20,21 +20,22 @@ class word:
         self.x = screenWidth
         self.y = random.randrange(0,screenHeight-150)
         self.dx = 0.6
-        self.font = pygame.font.Font("Adobe_Dia.ttf",34)
-        text_surface = self.font.render(self.word, True, (255,255,255))
+        self.font = pygame.font.Font(fontName,34)
+        self.color = (255,255,255)
+        text_surface = self.font.render(self.word, True, self.color)
         self.width = text_surface.get_width()
         
-    def update(self,color):
-        text_surface = self.font.render(self.word, True, color)
+    def update(self):
+        text_surface = self.font.render(self.word, True, self.color)
         self.x = self.x - self.dx
         screen.blit(text_surface, (int(self.x),int(self.y)))
 
 def updateText(text,x,y):
-    font = pygame.font.Font("Adobe_Dia.ttf",32).render(text, True, (0,0,0))
+    font = pygame.font.Font(fontName,32).render(text, True, (0,0,0))
     screen.blit(font,(x,y))
 
 def drawInputText(text,y):
-    font = pygame.font.Font("Adobe_Dia.ttf",34).render(text, True, (0,0,0))
+    font = pygame.font.Font(fontName,34).render(text, True, (0,0,0))
     text_width = font.get_width()
     screen.blit(font,(int(screenWidth/2-(text_width/2)),y))
 
@@ -52,12 +53,24 @@ def checkCurrentWPM(liste):
 def checkInput(word,liste):
     for x in liste:
         if x.word == word:
+            checkScore(x)
             del liste[liste.index(x)]
-            return True
+            return x.color
+def checkScore(x):
+        score = 0
+        if x == (255,255,255):
+            score = 1
+        elif x == (0,255,0):
+            score = 2
+        elif x ==(255,0,0):
+            score = 3
+        return score
+
 
 with open("words.txt") as f:
     wordList = f.read().splitlines()
-        
+
+fontName = "Adobe_Dia.ttf"       
 wordScreenList = []
 starScreenList = []
 screenWidth = 800
@@ -68,6 +81,9 @@ recentCorrectWords = []
 missedWords = 0
 inputWidth = None
 i= 0
+
+score = 0
+Name = ""
 
 pygame.init()
 screen = pygame.display.set_mode([screenWidth,screenHeight])
@@ -85,18 +101,23 @@ while running:
     
     for item in wordScreenList:
         if screenWidth/4 < item.x <= screenWidth/2:
-            item.update((0,255,0))
+            item.color = (0,255,0)
+            item.update()
         elif item.x <= screenWidth/4:
-            item.update((255,0,0))
+            item.color = (255,0,0)
+            item.update()
         else:
-            item.update((255,255,255))
+            item.update()
         for subItem in wordScreenList:
             if item != subItem:
                 if item.x - subItem.x < 70 and -15 < (item.y - subItem.y) < 15:
                     del wordScreenList[wordScreenList.index(subItem)]
+
         if item.x <= -item.width:
             del wordScreenList[wordScreenList.index(item)]
+            score = score - 1
             missedWords += 1
+            print(score)
     
     
     if random.randrange(1,100) == 2:
@@ -121,9 +142,12 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                if checkInput(userInput,wordScreenList) == True:
+                inputVarColor = checkInput(userInput,wordScreenList)
+                if inputVarColor == (255,255,255) or (0,255,0) or (255,0,0):
                     correctWords.append(userInput)
                     recentCorrectWords.append((userInput,seconds))
+                    score += checkScore(inputVarColor)
+                    print(score)
                 userInput = "" 
             elif event.key == pygame.K_BACKSPACE:
                 userInput= userInput[:-1]
